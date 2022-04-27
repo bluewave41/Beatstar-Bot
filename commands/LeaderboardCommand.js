@@ -7,21 +7,9 @@ async function run() {
 	let description = '';
 	
 	for(var x=0;x<response.data.length;x++) {
-		description += `${x+1}: ${response.data[x].androidId} - ${response.data[x].totalMedalCount} medals\n`;
+		const name = response.data[x].username ? response.data[x].username : response.data[x].androidId;
+		description += `${x+1}: ${name} - ${response.data[x].totalMedalCount} medals\n`;
 	}
-	
-	console.log(description)
-	
-	/*{
-      userId: 801,
-      username: '',
-      androidId: 'c57f06b2ac77ef58',
-      gold: 1,
-      platinum: 29,
-      diamond: 123,
-      perfect: 3,
-      totalMedalCount: 155
-    }*/
 	
 	const exampleEmbed = new MessageEmbed()
 		.setColor('#0099ff')
