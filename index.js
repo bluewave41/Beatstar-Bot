@@ -3,6 +3,7 @@ const { Client, Intents } = require('discord.js');
 const LeaderboardCommand = require('./commands/LeaderboardCommand');
 const ClaimCommand = require('./commands/ClaimCommand');
 const InfoCommand = require('./commands/InfoCommand');
+const LinksCommand = require('./commands/LinksCommand');
 const fs = require('fs').promises;
 require('./lib/Database');
 // Create a new client instance
@@ -19,6 +20,9 @@ client.on('interactionCreate', async interaction => {
 	
 	if(commandName == 'leaderboard') {
 		await interaction.reply({ embeds: [await LeaderboardCommand()] });
+	}
+	else if(commandName == 'links') {
+		await interaction.reply({ embeds: [await LinksCommand()] });
 	}
 	if(commandName == 'claim') {
 		//have they already claimed an account?
