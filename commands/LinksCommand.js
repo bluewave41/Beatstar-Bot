@@ -28,13 +28,18 @@ async function run() {
 				try {
 					while(configReader.hasNext()) {
 						const configFileName = configReader.readString();
-						console.log(configFileName)
-						const version = configReader.readString();
-						info[configFileName] = {
-							version: version,
-							hash: configReader.readString(),
-							diffs: configReader.readString(),
-							url: configReader.readString()
+						configReader.readByte();
+						info[configFileName] = {}
+						info[configFileName]['version'] = configReader.readString();
+						configReader.readByte();
+						info[configFileName]['hash'] = configReader.readString();
+						configReader.readByte();
+						console.log(info)
+						info[configFileName]['diffs'] = configReader.readString();
+						let b = configReader.readByte();
+						if(b == 0x2a) {
+							info[configFileName]['url'] = configReader.readString();
+							configReader.readByte();
 						}
 						save[configFileName] = version;
 						configReader.skip(3);
@@ -51,7 +56,7 @@ async function run() {
 						if(local[key] != info[key].version) {
 							updated.push(key);
 						}
-						str += key + ': ' + info[key].url + '\n';
+						str += key + ': ' + info[key].url ? info[key].url : info[key].diffs + '\n';
 					}
 					
 					if(updated.length) {
