@@ -17,12 +17,15 @@ async function run() {
 			let save = {};
 			let updated = [];
 			const local = JSON.parse(fs.readFileSync('links.json').toString());
-			reader.skip(19);
-			const str = reader.readString();
-			reader.readByte();
+			
+			while(reader.peek() != '0x1f') {
+				console.log(reader.peek());
+				reader.readByte();
+			}
 			
 			let zipped = reader.slice(reader.data.length - reader.position);
 			zlib.gunzip(zipped, function(err, buf) {
+				console.log('INFO', err, buf);
 				const configReader = new BufferedReader(buf);
 				configReader.skip(23);
 				try {
@@ -41,11 +44,12 @@ async function run() {
 							info[configFileName]['url'] = configReader.readString();
 							configReader.readByte();
 						}
-						save[configFileName] = version;
+						save[configFileName] = info[configFileName]['version'];
 						configReader.skip(3);
 					}
 				}
 				catch(e) {
+					console.log('ERROR', e);
 					//send info and cleanup
 					fs.writeFileSync('links.json', JSON.stringify(save));
 					let str = '';
@@ -56,7 +60,7 @@ async function run() {
 						if(local[key] != info[key].version) {
 							updated.push(key);
 						}
-						str += key + ': ' + info[key].url ? info[key].url : info[key].diffs + '\n';
+						str += key + ': ' + (info[key].url ? info[key].url : info[key].diffs) + '\n';
 					}
 					
 					if(updated.length) {
