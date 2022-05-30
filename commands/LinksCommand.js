@@ -17,7 +17,6 @@ async function run() {
 			let save = {};
 			let updated = [];
 			const local = JSON.parse(fs.readFileSync('links.json').toString());
-			console.log(local);
 			reader.skip(19);
 			const str = reader.readString();
 			reader.readByte();
@@ -29,6 +28,7 @@ async function run() {
 				try {
 					while(configReader.hasNext()) {
 						const configFileName = configReader.readString();
+						console.log(configFileName)
 						const version = configReader.readString();
 						info[configFileName] = {
 							version: version,
@@ -62,6 +62,7 @@ async function run() {
 						.setColor('#0099ff')
 						.setTitle('Assets')
 						.setDescription(str)
+					console.log(str);
 						
 					resolve(exampleEmbed);
 				}
